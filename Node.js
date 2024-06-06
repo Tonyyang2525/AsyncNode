@@ -28,9 +28,18 @@ app.get("/items", (req, res) => {
 //POST end point to create a new data
 app.post("/items", (req, res) => {
   const newItems = req.body;
-  items.push(newItems);
-  //   res.status(201).json(newItems);
-  res.status(200).json(newItems);
+  const index = items.findIndex((item) => newItems.id == item.id);
+  //This will stop from creating duplicte objects with the same id number
+  //To test this please run post 2 or 3 times and it should display error message.
+  //this will also keep data from having duplicate id's
+  //run get to check if data has not changed
+  if (index !== -1) {
+    res.status(404).send("Id already exists, please enter a valid id");
+  } else {
+    items.push(newItems);
+    //   res.status(201).json(newItems);
+    res.status(200).json(newItems);
+  }
 });
 
 //Delete endpoint to delete a data by id
