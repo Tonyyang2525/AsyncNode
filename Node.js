@@ -3,6 +3,8 @@ const express = require("express");
 // const employees = require("./node.json");
 
 const app = express();
+app.use(express.json());
+
 const PORT = 3000;
 
 let items = [
@@ -29,7 +31,6 @@ app.post("/items", (req, res) => {
   items.push(newItems);
   //   res.status(201).json(newItems);
   res.status(200).json(newItems);
-  setTimeout(() => res.send(items), 1000);
 });
 
 //Delete endpoint to delete a data by id
@@ -43,11 +44,13 @@ app.delete("/items/:id", (req, res) => {
 app.put("/items/:id", (req, res) => {
   const [id] = req.params.id;
   const updatedItem = req.body;
-  const index = items.findIndex((item) => id === item.id);
-  if (index !== -1) {
+  const index = items.findIndex((item) => id == item.id);
+  console.log(updatedItem);
+  if (index == -1) {
     res.status(404).send("error");
   }
   items[index] = updatedItem;
+  // console.log(items);
   res.send(items);
 });
 
