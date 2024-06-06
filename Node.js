@@ -5,7 +5,7 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
-const items = [
+let items = [
   { id: 1, name: "Tony", description: "Apprentice" },
   { id: 2, name: "Chris", description: "Manager" },
   { id: 3, name: "Jeff", description: "Custodian" },
@@ -28,28 +28,29 @@ app.post("/items", (req, res) => {
   const newItems = req.body;
   items.push(newItems);
   //   res.status(201).json(newItems);
-  res.status(201).json(newItems);
+  res.status(200).json(newItems);
+  setTimeout(() => res.send(items), 1000);
 });
 
 //Delete endpoint to delete a data by id
-app.delete("/items/:id", (res, req) => {
-  const { id } = req.params;
-  items = items.filter((item) => item.id !== parseInt(id));
-  res.sendStatus(204);
+app.delete("/items/:id", (req, res) => {
+  items = items.filter((item) => item.id !== parseInt(req.params.id));
+  res.send(items);
+  setTimeout(() => res.send(items), 1000);
 });
 
 //PUT endpoint to udpate dta by id
 app.put("/items/:id", (req, res) => {
-  const [id] = req.params;
+  const [id] = req.params.id;
   const updatedItem = req.body;
   const index = items.findIndex((item) => id === item.id);
   if (index !== -1) {
-    items[index] = updatedItem;
+    res.status(404).send("error");
   }
-  return items;
+  items[index] = updatedItem;
+  res.send(items);
 });
-//   res, json(items.find((item) => item.id === parseInt(id)));
-// });
+
 app.listen(PORT, () => {
   console.log(`Sever is listening at http://localhost:${PORT}`);
 });
